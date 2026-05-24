@@ -1,6 +1,6 @@
-#include <Geode/loader/SettingV3.hpp>
+#include <Geode/Geode.hpp>
 #include <Geode/modify/CCLayer.hpp>
 
 using namespace geode::prelude;
 
-// Your custom keybinds setup logic will compile perfectly now that the broken path is dead.
+// Your custom keybinds setup logic can go here later when you need it.
