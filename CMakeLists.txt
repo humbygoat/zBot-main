@@ -1,9 +1,16 @@
 cmake_minimum_required(VERSION 3.21)
 project(zBot VERSION 3.0.1 LANGUAGES CXX)
 
-# This is the only command required to load Geode in a modern Geode environment
-find_package(Geode REQUIRED)
+# The GitHub Action sets this variable. We use it to manually include the SDK.
+# This bypasses the need for find_package to "search" the system.
+if (DEFINED ENV{GEODE_SDK})
+    message(STATUS "Manually including Geode from: $ENV{GEODE_SDK}")
+    include("$ENV{GEODE_SDK}/cmake/GeodeConfig.cmake")
+else()
+    message(FATAL_ERROR "GEODE_SDK is not set! The GitHub Action did not initialize correctly.")
+endif()
 
+# Now geode_add_mod will be recognized because GeodeConfig.cmake is included
 geode_add_mod(zBot SHARED)
 
 target_sources(zBot PRIVATE
