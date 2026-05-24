@@ -5,6 +5,7 @@ set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
 project(zBot VERSION 3.0.0 LANGUAGES CXX)
+add_compile_definitions(CC_KEYBOARD_DISPATCHER_FOUR_ARGS)
 
 file(GLOB SOURCES
 	src/framecounting.cpp
