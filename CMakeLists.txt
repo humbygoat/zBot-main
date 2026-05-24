@@ -1,11 +1,9 @@
 cmake_minimum_required(VERSION 3.21)
 project(zBot VERSION 3.0.1 LANGUAGES CXX)
 
-# The GitHub Action clones the SDK into a specific folder.
-# We point CMake directly to it.
-add_subdirectory(${GEODE_SDK_PATH})
+# This is the only command required to load Geode in a modern Geode environment
+find_package(Geode REQUIRED)
 
-# Now geode_add_mod is a recognized command
 geode_add_mod(zBot SHARED)
 
 target_sources(zBot PRIVATE
