@@ -1,21 +1,11 @@
 name: Build Mod
-
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
+on: [push, pull_request]
 jobs:
   build:
     runs-on: windows-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
-
-      - name: Build Mod
+      - name: Build mod
         uses: geode-sdk/build-geode-mod@main
-        with:
-          sdk: latest
