@@ -14,9 +14,6 @@ jobs:
         config:
         - name: Windows
           os: windows-latest
-          
-        - name: MacOS
-          os: macos-latest
 
     name: ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
@@ -36,5 +33,5 @@ jobs:
       - name: Upload Finished Mod
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.config.name }}-geode-file
+          name: zBot-Windows-Mod
           path: build/*.geode
