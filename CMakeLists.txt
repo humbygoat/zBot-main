@@ -19,34 +19,33 @@ file(GLOB SOURCES
     src/zKeyChecker/keychecker.cpp 
 )
 
-# 1. Create the library target first
-add_library(${PROJECT_NAME} SHARED ${SOURCES})
-
-# 2. Add include directories
-target_include_directories(${PROJECT_NAME} PRIVATE src)
-
-# 3. Add compile definitions to the created target
-target_compile_definitions(${PROJECT_NAME} PRIVATE CC_KEYBOARD_DISPATCHER_FOUR_ARGS)
-
 if (NOT DEFINED ENV{GEODE_SDK})
-    message(FATAL_ERROR "Unable to find Geode SDK! Please define GEODE_SDK environment variable.")
+    message(FATAL_ERROR "Unable to find Geode SDK!")
 else()
     message(STATUS "Found Geode: $ENV{GEODE_SDK}")
 endif()
 
 add_subdirectory($ENV{GEODE_SDK} $ENV{GEODE_SDK}/build)
 
+# 1. Define the mod
+geode_add_mod(zBot SHARED ${SOURCES})
+
+# 2. Add include directories
+target_include_directories(zBot PRIVATE src)
+
+# 3. Add the required definition for the keyboard dispatcher fix
+target_compile_definitions(zBot PRIVATE CC_KEYBOARD_DISPATCHER_FOUR_ARGS)
+target_compile_definitions(zBot PRIVATE MOD_VERSION="${CMAKE_PROJECT_VERSION}")
+
+# 4. Dependency packages
 CPMAddPackage("gh:maxnut/GDReplayFormat#9c32b5529067901418ea6e4dfbd36437dc8712bc")
 CPMAddPackage("gh:matcool/gd-imgui-cocos#8973953519fa05d81c61634e585559ab87ca559d")
 
-target_compile_definitions(${PROJECT_NAME} PRIVATE MOD_VERSION="${CMAKE_PROJECT_VERSION}")
-
-# 4. Standardize linking with keywords to avoid the conflict error
-if (WIN32)
-    target_link_libraries(${PROJECT_NAME} PRIVATE imgui-cocos libGDR)
-elseif (APPLE)
-    target_link_libraries(${PROJECT_NAME} PRIVATE imgui-cocos libGDR "-framework IOKit")
+# 5. Link libraries using the required keyword signature
+target_link_libraries(zBot PRIVATE imgui-cocos libGDR)
+if (APPLE)
+    target_link_libraries(zBot PRIVATE "-framework IOKit")
 endif()
 
-# 5. Final Geode setup
-setup_geode_mod(${PROJECT_NAME})
+# 6. Final setup
+setup_geode_mod(zBot)
