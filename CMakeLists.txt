@@ -1,16 +1,11 @@
 cmake_minimum_required(VERSION 3.21)
 project(zBot VERSION 3.0.1 LANGUAGES CXX)
 
-# Bypass find_package() by manually including the SDK
-# The action provides the path in the GEODE_SDK environment variable
-if (DEFINED ENV{GEODE_SDK})
-    message(STATUS "Loading Geode SDK from $ENV{GEODE_SDK}")
-    include("$ENV{GEODE_SDK}/cmake/GeodeConfig.cmake")
-else()
-    message(FATAL_ERROR "GEODE_SDK environment variable is missing. Check your workflow!")
-endif()
+# Do NOT include or add_subdirectory. 
+# The build action sets up the environment automatically.
+# Just find the Geode package that the action "injects" into the environment.
+find_package(Geode REQUIRED)
 
-# Now that the config is included, these commands will work
 geode_add_mod(zBot SHARED)
 
 target_sources(zBot PRIVATE
