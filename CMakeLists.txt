@@ -1,8 +1,14 @@
 cmake_minimum_required(VERSION 3.21)
 project(zBot VERSION 3.0.1 LANGUAGES CXX)
 
-# The build-geode-mod action automatically provides the Geode package.
-# We use find_package which is the standard way to hook into the Geode toolchain.
+# Force CMake to look inside the GitHub runner's environment variables
+if (DEFINED ENV{GEODE_SDK})
+    # This manually tells find_package exactly where the configuration files are
+    set(Geode_DIR "$ENV{GEODE_SDK}/share/Geode/cmake" CACHE PATH "Path to Geode package")
+    list(APPEND CMAKE_PREFIX_PATH "$ENV{GEODE_SDK}")
+endif()
+
+# Now find_package is forced to look in the right place
 find_package(Geode REQUIRED)
 
 geode_add_mod(zBot SHARED)
