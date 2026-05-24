@@ -1,14 +1,23 @@
 cmake_minimum_required(VERSION 3.21)
 project(zBot VERSION 3.0.1 LANGUAGES CXX)
 
-# Force CMake to look inside the GitHub runner's environment variables
-if (DEFINED ENV{GEODE_SDK})
-    # This manually tells find_package exactly where the configuration files are
-    set(Geode_DIR "$ENV{GEODE_SDK}/share/Geode/cmake" CACHE PATH "Path to Geode package")
-    list(APPEND CMAKE_PREFIX_PATH "$ENV{GEODE_SDK}")
-endif()
+# --- THE BULLETPROOF GEODE PATH RESOLVER ---
+# Since the GitHub runner environment variables aren't behaving, 
+# we force CMake to execute the Geode CLI and ask it exactly where the SDK is installed.
+execute_process(
+    COMMAND geode sdk path
+    OUTPUT_VARIABLE GEODE_CLI_PATH
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    ERROR_QUIET
+)
 
-# Now find_package is forced to look in the right place
+if (GEODE_CLI_PATH)
+    message(STATUS "Geode CLI reported SDK path: ${GEODE_CLI_PATH}")
+    list(APPEND CMAKE_PREFIX_PATH "${GEODE_CLI_PATH}")
+    set(Geode_DIR "${GEODE_CLI_PATH}/share/Geode/cmake" CACHE PATH "Force Geode path" FORCE)
+endif()
+# -------------------------------------------
+
 find_package(Geode REQUIRED)
 
 geode_add_mod(zBot SHARED)
