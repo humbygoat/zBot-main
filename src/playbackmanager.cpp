@@ -11,7 +11,7 @@ int clickBotIndex = 0;
 class $modify(zGJBaseGameLayer, GJBaseGameLayer) {
     void processCommands(float delta) {
         if (!zBot::get()->ignoreInput) {
-            GJBaseGameLayer::processCommands(delta);
+            GJBaseGameLayer::processCommands(delta, false, true);
         }
 
         zBot* mgr = zBot::get();
