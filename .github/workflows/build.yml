@@ -9,6 +9,12 @@ jobs:
         with:
           submodules: recursive
 
+      # Bypasses the 630MB corrupted cache file seen in your logs
+      - name: Clear Corrupted Cache
+        run: |
+          if (Test-Path build) { Remove-Item -Recurse -Force build }
+          if (Test-Path .cpm-cache) { Remove-Item -Recurse -Force .cpm-cache }
+
       - name: Build mod
         uses: geode-sdk/build-geode-mod@main
         with:
