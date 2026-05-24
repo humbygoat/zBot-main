@@ -1,12 +1,15 @@
 cmake_minimum_required(VERSION 3.21)
 
-# 1. Project must come BEFORE finding Geode
+# Ensure CMake looks in the place where the action installs Geode
+if (DEFINED ENV{GEODE_SDK})
+    list(APPEND CMAKE_PREFIX_PATH "$ENV{GEODE_SDK}")
+endif()
+
 project(zBot VERSION 3.0.1 LANGUAGES CXX)
 
-# 2. This loads the Geode commands (geode_add_mod, etc)
+# Now find_package will look in the path we just added
 find_package(Geode REQUIRED)
 
-# 3. NOW you can safely call this
 geode_add_mod(zBot SHARED)
 
 target_sources(zBot PRIVATE
