@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 3.21)
 project(zBot VERSION 3.0.1 LANGUAGES CXX)
 
-# Do NOT include or add_subdirectory. 
-# The build action sets up the environment automatically.
-# Just find the Geode package that the action "injects" into the environment.
+# This is the exact path the build-geode-mod action uses.
+# We force CMake to use this directory as the Geode installation.
+list(APPEND CMAKE_PREFIX_PATH "$ENV{GEODE_SDK}")
+
 find_package(Geode REQUIRED)
 
 geode_add_mod(zBot SHARED)
