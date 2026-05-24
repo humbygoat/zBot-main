@@ -1,12 +1,21 @@
 cmake_minimum_required(VERSION 3.21)
+
+# Ensure the SDK path is defined via environment variable
+if (NOT DEFINED ENV{GEODE_SDK})
+    message(FATAL_ERROR "GEODE_SDK environment variable is not set. Is the GitHub Action running correctly?")
+endif()
+
+# Set the path to the SDK based on the environment variable provided by the action
+list(APPEND CMAKE_PREFIX_PATH "$ENV{GEODE_SDK}")
+
 project(zBot VERSION 3.0.1 LANGUAGES CXX)
 
-# This is the only line needed to find the SDK in a CI/CD environment
+# Use the Geode SDK directly
 find_package(Geode REQUIRED)
 
-# Now these commands will work
 geode_add_mod(zBot SHARED)
 
+# Add your source files
 target_sources(zBot PRIVATE
     src/framecounting.cpp
     src/gui.cpp
