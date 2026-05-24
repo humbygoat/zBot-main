@@ -1,12 +1,19 @@
 cmake_minimum_required(VERSION 3.21)
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
-set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
+# 1. Project setup
 project(zBot VERSION 3.0.1 LANGUAGES CXX)
 
-file(GLOB SOURCES
+# 2. Find and include Geode SDK
+if (NOT DEFINED ENV{GEODE_SDK})
+    message(FATAL_ERROR "Unable to find Geode SDK! Please define GEODE_SDK environment variable.")
+endif()
+add_subdirectory($ENV{GEODE_SDK} $ENV{GEODE_SDK}/build)
+
+# 3. Define the mod (This replaces add_library)
+geode_add_mod(zBot)
+
+# 4. Add your sources
+target_sources(zBot PRIVATE
     src/framecounting.cpp
     src/gui.cpp
     src/keybinds.cpp
@@ -19,33 +26,22 @@ file(GLOB SOURCES
     src/zKeyChecker/keychecker.cpp 
 )
 
-if (NOT DEFINED ENV{GEODE_SDK})
-    message(FATAL_ERROR "Unable to find Geode SDK!")
-else()
-    message(STATUS "Found Geode: $ENV{GEODE_SDK}")
-endif()
-
-add_subdirectory($ENV{GEODE_SDK} $ENV{GEODE_SDK}/build)
-
-# 1. Define the mod
-geode_add_mod(zBot SHARED ${SOURCES})
-
-# 2. Add include directories
+# 5. Add include directories
 target_include_directories(zBot PRIVATE src)
 
-# 3. Add the required definition for the keyboard dispatcher fix
+# 6. Compile definitions (Fix for your keyboard dispatcher error)
 target_compile_definitions(zBot PRIVATE CC_KEYBOARD_DISPATCHER_FOUR_ARGS)
 target_compile_definitions(zBot PRIVATE MOD_VERSION="${CMAKE_PROJECT_VERSION}")
 
-# 4. Dependency packages
+# 7. Dependencies
 CPMAddPackage("gh:maxnut/GDReplayFormat#9c32b5529067901418ea6e4dfbd36437dc8712bc")
 CPMAddPackage("gh:matcool/gd-imgui-cocos#8973953519fa05d81c61634e585559ab87ca559d")
 
-# 5. Link libraries using the required keyword signature
+# 8. Linking (Standardized to use PRIVATE to prevent conflicts)
 target_link_libraries(zBot PRIVATE imgui-cocos libGDR)
 if (APPLE)
     target_link_libraries(zBot PRIVATE "-framework IOKit")
 endif()
 
-# 6. Final setup
+# 9. Final Geode setup
 setup_geode_mod(zBot)
