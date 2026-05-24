@@ -1,4 +1,5 @@
-#include <Keybinds.hpp>
+#include <Geode/loader/SettingV3.hpp>
+#include <geode.custom-keybinds/include/Keybinds.hpp>
 #include <imgui-cocos.hpp>
 #include "gui.hpp"
 #include "zBot.hpp"
