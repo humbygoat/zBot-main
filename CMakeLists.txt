@@ -1,9 +1,12 @@
 cmake_minimum_required(VERSION 3.21)
+
+# 1. Project must come BEFORE finding Geode
 project(zBot VERSION 3.0.1 LANGUAGES CXX)
 
-# No find_package or add_subdirectory needed here!
-# The action provides the environment automatically.
+# 2. This loads the Geode commands (geode_add_mod, etc)
+find_package(Geode REQUIRED)
 
+# 3. NOW you can safely call this
 geode_add_mod(zBot SHARED)
 
 target_sources(zBot PRIVATE
