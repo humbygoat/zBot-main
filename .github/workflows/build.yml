@@ -9,10 +9,7 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install Geode CLI
-        uses: geode-sdk/install-geode-cli@main
-
       - name: Build mod
-        shell: bash
-        run: |
-          geode build --no-install
+        uses: geode-sdk/build-geode-mod@main
+        with:
+          sdk: latest
